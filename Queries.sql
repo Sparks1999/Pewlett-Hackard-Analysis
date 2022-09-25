@@ -66,11 +66,37 @@ and (hire_date between '1985-01-01' and '1988-12-31');
 
 
 --Using joins--
-select department.dept_name,
-    dept_manager.emp_no,
-    dept_manager.from_date,
-    dept_manager.to_date
-from department
-inner join dept_manager
+select d.dept_name,
+    dm.emp_no,
+    dm.from_date,
+    dm.to_date
+from department as d
+inner join dept_manager as dm
 on department.dept_no = dept_manager.dept_no;
 
+select ri.emp_no,
+    ri.first_name,
+    ri.last_name,
+    de.to_date,
+from retirement_info as ri
+left join dept_emp as de
+on ri.emp_no = de.emp_no;
+
+select ri.emp_no,
+    ri.first_name,
+    ri.last_name,
+    de.to_date
+into current_emp
+from retirement_info as ri
+left join dept_emp as de
+on ri.emp_no = de.emp_no
+where de.to_date = ('9999-01-01');
+
+--Using count, group by and order by--
+select count(ce.emp_no),de.dept_no
+into dept_count
+from current_emp as ce
+left join dept_emp as de
+on ce.emp_no = de.emp_no
+group by de.dept_no
+order by de.dept_no;
